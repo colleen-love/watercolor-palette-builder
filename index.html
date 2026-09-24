@@ -15,11 +15,8 @@
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"Literata",Georgia,"Times New Roman",serif;font-size:16px;line-height:1.55}
-header{max-width:1240px;margin:0 auto;padding:28px 24px 8px}
 h1{font-weight:500;font-size:30px;line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
 header p{margin:0;color:var(--graphite);max-width:68ch;font-size:15px}
-main{max-width:1240px;margin:0 auto;padding:12px 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:32px;align-items:start}
-@media (max-width:900px){main{grid-template-columns:1fr}}
 svg#wheel{width:100%;height:auto;display:block;max-height:86vh;touch-action:manipulation}
 .controls{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:6px;font-size:14px;color:var(--graphite)}
 .controls label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
@@ -58,17 +55,59 @@ input[type=search]{width:100%;font:inherit;font-size:15px;padding:7px 12px;borde
 #results{max-height:260px;overflow-y:auto;margin-top:6px}
 .fine{font-size:13px;color:var(--graphite);line-height:1.5}
 .fine a{color:inherit}
+.count{font-weight:400;color:var(--graphite);font-size:16px}
+.mixing{max-width:1240px;margin:0 auto;padding:8px 24px 48px}
+.mixing>.mhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;border-top:1px solid var(--rule);padding-top:24px;margin-bottom:14px}
+.mixing h2{font-size:24px;font-weight:500;margin:0}
+.water{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--graphite)}
+.water input{width:220px;accent-color:var(--ink)}
+.water output{min-width:3.2em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.mgrid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:900px){.mgrid{grid-template-columns:1fr}}
+.mpick .row{cursor:pointer}
+.mpick input{accent-color:var(--ink);margin:0}
+.mpick .row.dis{opacity:.45;cursor:default}
+.bar{margin:0 0 18px}
+.bar .bl{display:flex;justify-content:space-between;gap:12px;font-size:14px;margin-bottom:5px}
+.bar .bl .g{color:var(--graphite);font-size:13px;white-space:nowrap}
+.strip{position:relative;height:44px;border-radius:6px;overflow:hidden;border:1px solid rgba(128,128,128,.25)}
+.strip .tex{position:absolute;inset:0;mix-blend-mode:multiply;opacity:.55;background-size:120px 120px}
+.empty{color:var(--graphite);font-size:15px;padding:18px;border:1px dashed var(--rule);border-radius:10px}
+.below{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;margin-top:22px;align-items:start}
+.below h2{font-size:18px;font-weight:600;margin:0 0 8px}
+@media (max-width:640px){.below{grid-template-columns:1fr}}
+.notes{max-width:1240px;margin:0 auto;padding:0 24px 40px}
+.notes p{max-width:90ch;margin:0}
+.page{max-width:1280px;margin:0 auto;padding:0 24px 40px;display:grid;grid-template-columns:minmax(0,1fr) 380px;column-gap:40px;row-gap:36px;align-items:start}
+.page>header{grid-column:1/-1;text-align:center;padding:28px 0 0;max-width:none}
+.page>header p{margin:0 auto}
+.r2l{grid-column:1}.r2r{grid-column:2}.r3l{grid-column:1}.r3r{grid-column:2}
+.r4{grid-column:1/-1;display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:40px;align-items:start}
+.r4l{grid-column:1}.r4r{grid-column:2}.r5{grid-column:1/-1}
+.r2r,.r3r{display:flex;flex-direction:column;gap:26px}
+.r2r h2,.r3r h2,.r3l h2,.r4l h2{font-size:18px;font-weight:600;margin:0 0 8px}
+.r3l,.r4l,.r4r{border-top:1px solid var(--rule);padding-top:22px}
+.r3r{border-top:1px solid var(--rule);padding-top:22px}
+#pal{columns:2 260px;column-gap:28px}
+#pal .row,#mixPal .row{break-inside:avoid}
+.mixh{font-size:24px!important;font-weight:500!important}
+.mtop{display:flex;justify-content:flex-end;margin-bottom:14px}
+/* mixing row: narrow picker, wide strips */
+@media (min-width:901px){.page{grid-template-areas:none}
+ .r4l{grid-column:1;max-width:none}
+}
+@media (max-width:900px){.r4{grid-template-columns:1fr;row-gap:24px}.page{grid-template-columns:1fr}.r2l,.r2r,.r3l,.r3r,.r4l,.r4r,.r5{grid-column:1}}
 #tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:13px;padding:5px 9px;border-radius:6px;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5}
 @media (prefers-reduced-motion:reduce){#tip{transition:none}}
 </style>
 </head>
 <body>
+<div class="page">
 <header>
 <h1>Daniel Smith pigment wheel</h1>
 <p>Every Daniel Smith Extra Fine watercolor placed by hue angle and chroma, from the company's own CIELAB measurements. Tap dots to build a palette; the wash shows the range of colors it can reach. Your palette and filters are saved in this browser.</p>
 </header>
-<main>
-<section>
+<section class="r2l">
 <svg id="wheel" viewBox="-124 -124 248 248" role="img" aria-label="Hue and chroma wheel of Daniel Smith watercolors">
 <defs>
 <filter id="wet" x="-20%" y="-20%" width="140%" height="140%">
@@ -79,15 +118,16 @@ input[type=search]{width:100%;font:inherit;font-size:15px;padding:7px 12px;borde
 <g id="grid"></g><g id="ring"></g><g id="washg"></g><g id="baseg"></g><g id="allg"></g><g id="labg"></g>
 </svg>
 <div class="controls">
+<label><input type="checkbox" id="showMine" checked> My palette</label>
 <label><input type="checkbox" id="showAll" checked> Other paints</label>
 <label><input type="checkbox" id="showLab" checked> Names</label>
 <label><input type="checkbox" id="showBase" checked> Starting outline</label>
 <button id="setBase">Make this the starting outline</button>
 <button id="reset">Clear palette</button>
 </div>
-<div id="info">Hover or tap a dot for its numbers. Tap to add it to your palette.</div>
+<div id="info" class="info-anchor">Hover or tap a dot for its numbers. Tap to add it to your palette.</div>
 </section>
-<aside>
+<aside class="r2r">
 <div>
 <h2>Reach</h2>
 <p class="stat"><span class="big" id="pct"></span> of the full Daniel Smith range</p>
@@ -106,24 +146,39 @@ input[type=search]{width:100%;font:inherit;font-size:15px;padding:7px 12px;borde
 <label class="fopt"><input type="checkbox" id="missing" checked> Keep paints with missing data</label>
 <p class="fcount" id="fcount"></p>
 </div>
+<p class="fine">Color data: Daniel Smith, <a href="https://danielsmith.com/daniel-smith-watercolors-cie-lab-coordinates/">Watercolors CIE Lab Coordinates</a>. Lightfastness, staining, granulation, transparency and price series: Daniel Smith's <a href="https://danielsmith.com/wp-content/uploads/2021/05/DS-Watercolor-pigment-characteristics.pdf">2021 pigment characteristics sheet</a>, plus retailer listings for King's Royal Blue and McCracken Black. Nine newer paints (the 2025 releases, both Jane's Blacks, Chrome Titanate Yellow) have missing data. Single pigment means one Colour Index pigment on the label; PrimaTek minerals count as single. Reach is the area of the outline around your paints in the a*b* plane. Real mixtures bow inward between distant hues and can bulge outward between neighbors, like yellow and green, so treat it as a guide. Lightness isn't shown.</p>
+</aside>
+<section class="r3l">
+<h2>Your palette <span class="count" id="palCount"></span></h2>
+<ul id="pal"></ul>
+</section>
+<aside class="r3r">
 <div>
 <h2>Biggest gains</h2>
 <p class="fine" style="margin:0 0 6px">Paints that meet your filters and would push your edge out furthest.</p>
 <ul id="gains"></ul>
 </div>
 <div>
-<h2>Your palette</h2>
-<ul id="pal"></ul>
-</div>
-<div>
 <h2>Add any paint</h2>
 <input type="search" id="q" placeholder="Search paints" aria-label="Search paints">
 <ul id="results"></ul>
 </div>
-<p class="fine">Color data: Daniel Smith, <a href="https://danielsmith.com/daniel-smith-watercolors-cie-lab-coordinates/">Watercolors CIE Lab Coordinates</a>. Lightfastness, staining, granulation, transparency and price series: Daniel Smith's <a href="https://danielsmith.com/wp-content/uploads/2021/05/DS-Watercolor-pigment-characteristics.pdf">2021 pigment characteristics sheet</a>, plus retailer listings for King's Royal Blue and McCracken Black. Nine newer paints (the 2025 releases, both Jane's Blacks, Chrome Titanate Yellow) have missing data. Single pigment means one Colour Index pigment on the label; PrimaTek minerals count as single. Reach is the area of the outline around your paints in the a*b* plane. Real mixtures bow inward, so treat it as a ceiling. Lightness isn't shown.</p>
 </aside>
-</main>
+<div class="r4">
+<section class="r4l mpick" aria-labelledby="mixh">
+<h2 id="mixh" class="mixh">Mixing</h2>
+<p class="fine" style="margin:0 0 6px">Pick up to 5 paints from your palette. Every pair gets a strip from one pure paint to the other.</p>
+<ul id="mixPal"></ul>
+</section>
+<section class="r4r" aria-label="Simulated mixes">
+<div class="mtop"><label class="water">Water <input type="range" id="water" min="0" max="90" step="5" value="0" aria-label="Water: how diluted every strip is"> <output id="waterVal">0%</output></label></div>
+<div id="bars"></div>
+</section>
+</div>
+<footer class="r5"><p class="fine" id="mixNote">Mixes are simulated with <a href="https://github.com/scrtwpns/mixbox">Mixbox</a> (Secret Weapons, CC BY-NC 4.0), starting from each paint's measured color. It's a pigment-like model, not Daniel Smith's spectral data, so treat strips as a preview and confirm on paper. Water thins every paint's optical density evenly, like diluting a wash on white paper. Texture marks the side of a strip where a component granulates.</p></footer>
+</div>
 <div id="tip"></div>
+<script src="https://cdn.jsdelivr.net/npm/mixbox@2.0.0/mixbox.js"></script>
 <script>
 const RAW=[["Buff Titanium", 88.0, 0.67, 25.54], ["Nickel Titanate Yellow", 94.0, -7.25, 38.58], ["Bismuth Vanadate Yellow", 92.0, -7.5, 76.14], ["Hansa Yellow Light", 92.0, -11.78, 88.13], ["Azo Yellow", 91.0, -3.05, 80.31], ["Quinophthalone Yellow", 90.0, -4.1, 86.5], ["Cadmium Yellow Light Hue", 92.0, -8.29, 89.0], ["Cadmium Yellow Medium Hue", 88.0, 5.93, 82.45], ["Aureolin (Cobalt Yellow)", 89.0, -3.62, 83.24], ["Cadmium Yellow Deep Hue", 81.0, 25.2, 86.2], ["Hansa Yellow Medium", 88.0, 3.19, 99.59], ["Mayan Yellow", 88.0, 2.12, 79.63], ["Lemon Yellow", 92.0, -8.37, 83.01], ["Indian Yellow", 84.0, 8.33, 86.92], ["Naples Yellow", 84.0, 7.61, 45.61], ["Hansa Yellow Deep", 81.0, 23.71, 79.48], ["New Gamboge", 85.0, 11.61, 77.33], ["Isoindoline Yellow", 75.0, 38.66, 77.08], ["Permanent Yellow Deep", 78.0, 30.62, 73.9], ["Aussie Red Gold", 67.0, 40.0, 69.21], ["Pyrrol Orange", 64.0, 58.7, 60.7], ["Permanent Orange", 71.0, 45.24, 64.69], ["Cadmium Orange Hue", 66.0, 52.4, 66.4], ["Perinone Orange", 64.0, 55.53, 58.28], ["Cadmium Red Scarlet Hue", 57.0, 54.4, 43.8], ["Transparent Pyrrol Orange", 53.0, 54.13, 43.74], ["Organic Vermilion", 54.0, 63.47, 52.17], ["Mayan Orange", 59.0, 54.33, 37.4], ["Quinacridone Coral", 62.0, 59.07, 17.53], ["Pyrrol Scarlet", 52.0, 61.49, 45.06], ["Perylene Scarlet", 48.0, 55.43, 35.93], ["Anthraquinoid Scarlet", 60.0, 55.6, 36.5], ["Cadmium Red Medium Hue", 51.0, 57.77, 39.19], ["Pyrrol Red", 47.0, 57.57, 35.19], ["Perylene Red", 46.0, 53.8, 26.76], ["Permanent Red", 47.0, 59.57, 35.31], ["Permanent Red Deep", 44.0, 58.67, 29.77], ["Quinacridone Red", 48.0, 58.8, 16.97], ["Anthraquinoid Red", 46.0, 51.8, 19.65], ["Mayan Red", 59.0, 54.16, 9.12], ["Alizarin Crimson", 47.0, 53.51, 16.75], ["Permanent Alizarin Crimson", 44.0, 53.92, 25.55], ["Rhodonite Genuine", 69.0, 38.62, -7.26], ["Carmine", 45.0, 53.62, 22.01], ["Rose Madder Permanent", 63.0, 48.41, -1.69], ["Opera Pink", 73.0, 50.75, -18.12], ["Potter's Pink", 80.0, 14.27, 4.77], ["Quinacridone Pink", 55.0, 61.09, -1.85], ["Quinacridone Rose", 61.0, 51.22, -2.88], ["Quinacridone Lilac", 48.0, 51.89, -5.21], ["Quinacridone Magenta", 47.0, 49.56, -5.27], ["Pyrrol Crimson", 43.0, 46.96, 19.78], ["Quinacridone Fuchsia", 44.0, 49.43, 8.34], ["Mayan Violet", 53.0, 36.11, -14.7], ["Bordeaux", 38.0, 41.42, 8.51], ["Permanent Violet", 34.0, 33.49, -2.97], ["Quinacridone Violet", 37.0, 43.34, 2.17], ["Perylene Violet", 38.0, 26.59, 2.98], ["Cobalt Violet", 86.0, 13.73, -3.97], ["Cobalt Violet Deep", 70.0, 13.96, -19.41], ["Wisteria", 72.0, 27.14, -21.47], ["Ultramarine Red", 76.0, 23.25, -11.93], ["Rose of Ultramarine", 38.0, 31.59, -20.33], ["Quinacridone Purple", 40.0, 33.99, -22.1], ["Imperial Purple", 49.0, 21.4, -34.52], ["Purpurite Genuine", 62.0, 11.69, -1.09], ["Ultramarine Violet", 73.0, 14.35, -20.69], ["Amethyst Genuine", 43.0, 16.0, -23.1], ["Carbazole Violet", 38.0, 24.54, -31.99], ["Cobalt Blue Violet", 52.0, 19.2, -40.69], ["Moonglow", 48.0, 7.81, -6.02], ["Shadow Violet", 54.0, 8.58, -0.72], ["Sugilite Genuine", 72.0, 7.19, -8.51], ["Kyanite Genuine", 64.0, -6.96, -15.89], ["Indigo", 27.0, 5.49, -10.61], ["Mayan Dark Blue", 37.0, -5.72, -19.31], ["Indanthrone Blue", 28.0, 13.2, -29.47], ["Sodalite Genuine", 57.0, -2.97, -8.97], ["Lapis Lazuli Genuine", 80.0, -4.69, -12.8], ["French Ultramarine", 51.0, 8.65, -58.12], ["Ultramarine Blue", 51.0, 6.71, -56.28], ["Cobalt Blue", 66.0, -8.31, -39.09], ["Phthalo Blue (Green Shade)", 50.0, -22.47, -38.36], ["Lavender", 79.0, 0.29, -23.11], ["King's Royal Blue", 77.0, -4.9, -26.2], ["Verditer Blue", 62.0, -12.1, -38.32], ["Phthalo Blue (Red Shade)", 40.0, -3.72, -41.15], ["Prussian Blue", 38.0, -5.18, -32.22], ["Mayan Blue Genuine", 59.0, -17.87, -14.57], ["Cerulean Blue", 78.0, -13.18, -18.06], ["Cerulean Blue Chromium", 58.0, -24.17, -29.0], ["Manganese Blue Hue", 81.0, -21.33, -18.74], ["Phthalo Blue Turquoise", 57.0, -37.0, -22.0], ["Cobalt Teal Blue", 82.0, -30.17, -6.71], ["Phthalo Turquoise", 52.0, -45.92, -10.39], ["Kingman Green Turquoise Genuine", 83.0, -17.58, 5.35], ["Ultramarine Turquoise", 50.0, -47.12, -5.41], ["Sleeping Beauty Turquoise Genuine", 77.0, -24.32, -6.9], ["Cobalt Turquoise", 71.0, -22.22, -2.99], ["Amazonite Genuine", 77.0, -34.25, 0.11], ["Blue Apatite Genuine", 62.0, -16.43, -12.27], ["Lunar Blue", 70.0, -14.53, -12.34], ["Cobalt Green Pale", 86.0, -13.89, 2.91], ["Fuchsite Genuine", 89.0, -15.62, 4.55], ["Viridian", 72.0, -31.9, 7.44], ["Diopside Genuine", 55.0, -32.24, 24.08], ["Phthalo Green (Blue Shade)", 46.0, -55.18, 9.37], ["Cascade Green", 50.0, -21.66, 2.04], ["Jadeite Genuine", 41.0, -21.63, 15.75], ["Cobalt Green", 69.0, -36.22, 25.25], ["Spring Green", 75.0, -46.15, 50.67], ["Permanent Green Light", 74.0, -51.06, 54.37], ["Phthalo Yellow Green", 83.0, -40.9, 73.44], ["Permanent Green", 60.0, -57.97, 36.04], ["Phthalo Green (Yellow Shade)", 61.0, -57.82, 27.36], ["Hooker's Green", 57.0, -37.49, 35.0], ["Sap Green", 57.0, -14.3, 43.67], ["Serpentine Genuine", 63.0, -9.09, 45.0], ["Chromium Green Oxide", 59.0, -14.21, 18.21], ["Green Apatite Genuine", 50.0, -10.38, 29.79], ["Terre Verte", 66.0, -16.29, 10.61], ["Deep Sap Green", 33.0, -15.62, 8.47], ["Perylene Green", 35.0, -5.61, 3.4], ["Prussian Green", 33.0, -19.11, -4.08], ["Rare Green Earth", 74.0, -6.28, 9.74], ["Undersea Green", 49.0, -8.24, 19.48], ["Zoisite Genuine", 67.0, -7.99, 9.61], ["Olive Green", 57.0, 0.49, 40.9], ["Green Gold", 76.0, -8.84, 77.68], ["Rich Green Gold", 76.0, 3.18, 68.57], ["Nickel Azo Yellow", 80.0, 9.4, 87.38], ["Bronzite Genuine", 73.0, 13.67, 29.43], ["Verona Gold Ochre", 87.0, 5.35, 30.9], ["Burnt Bronzite Genuine", 70.0, 14.35, 13.69], ["French Ochre", 82.0, 12.3, 44.73], ["Raw Sienna Light", 81.0, 15.18, 56.63], ["Burgundy Yellow Ochre", 80.0, 13.85, 51.56], ["Chrome Titanate Yellow", 81.0, 13.5, 38.6], ["Yellow Ochre", 76.0, 19.07, 55.3], ["Mars Yellow", 70.0, 22.43, 59.76], ["Yavapai Genuine", 71.0, 11.58, 25.17], ["Raw Sienna", 67.0, 24.2, 49.45], ["Transparent Yellow Oxide", 65.0, 21.74, 52.57], ["Monte Amiata Natural Sienna", 81.0, 12.48, 51.59], ["Enviro-Friendly Red Iron Oxide", 49.0, 26.54, 23.58], ["Goethite (Brown Ochre)", 63.0, 18.55, 40.12], ["Quinacridone Deep Gold", 64.0, 28.79, 56.17], ["Italian Deep Ochre", 84.0, 9.45, 29.14], ["Lunar Earth", 67.0, 19.32, 22.54], ["Burnt Yellow Ochre", 50.0, 36.39, 29.65], ["Garnet Genuine", 48.0, 39.14, 31.33], ["Roasted French Ochre", 60.0, 31.83, 35.89], ["Burgundy Red Ochre", 61.0, 27.47, 35.12], ["Indian Red", 45.0, 25.1, 15.94], ["Venetian Red", 49.0, 32.54, 24.25], ["Italian Burnt Sienna", 60.0, 29.99, 33.87], ["Quinacridone Burnt Orange", 58.0, 35.59, 44.31], ["Quinacridone Sienna", 63.0, 44.57, 52.41], ["Pompeii Red", 65.0, 26.87, 39.41], ["Red Fuchsite Genuine", 61.0, 23.49, 12.65], ["Terre Ercolano", 70.0, 29.83, 32.07], ["Minnesota Pipestone Genuine", 72.0, 20.11, 17.01], ["Italian Venetian Red", 77.0, 18.51, 16.92], ["English Red Earth", 47.0, 28.49, 24.94], ["Red Jasper Genuine", 62.0, 20.43, 21.32], ["Hematite Burnt Scarlet Genuine", 58.0, 19.9, 25.49], ["Quinacridone Burnt Scarlet", 55.0, 40.61, 31.6], ["Perylene Maroon", 39.0, 35.91, 19.35], ["Sedona Genuine", 71.0, 24.03, 28.86], ["Deep Scarlet", 44.0, 40.01, 27.06], ["Naphthamide Maroon", 36.0, 28.83, 10.61], ["Lunar Red Rock", 51.0, 16.35, 10.58], ["Piemontite Genuine", 47.0, 19.01, 8.3], ["Tiger's Eye Genuine", 73.0, 5.86, 19.85], ["Burnt Tiger's Eye Genuine", 70.0, 13.34, 20.4], ["Hematite Genuine", 67.0, 1.33, 5.57], ["German Greenish Raw Umber", 68.0, 4.78, 27.24], ["Hematite Violet Genuine", 67.0, 8.78, 9.05], ["Mummy Bauxite", 57.0, 19.9, 31.12], ["Permanent Brown", 43.0, 29.67, 23.43], ["Quinacridone Gold", 73.0, 21.9, 67.76], ["Raw Umber Violet", 44.0, 15.62, 12.11], ["Transparent Brown Oxide", 45.0, 24.16, 26.49], ["Transparent Red Oxide", 43.0, 29.67, 22.73], ["Fired Gold Ochre", 72.0, 19.47, 18.52], ["Burnt Sienna Light", 68.0, 25.13, 30.56], ["Enviro-Friendly Brown Iron Oxide", 52.0, 17.58, 22.13], ["Burnt Sienna", 56.0, 29.41, 33.41], ["English Red Ochre", 60.0, 26.25, 27.44], ["Burnt Umber", 49.0, 14.73, 24.06], ["Enviro-Friendly Yellow Iron Oxide", 56.0, 24.83, 33.06], ["Raw Umber", 51.0, 7.2, 20.97], ["Sepia", 44.0, 7.35, 16.5], ["Sicklerite Genuine", 64.0, 5.77, 13.16], ["Van Dyck Brown", 44.0, 6.33, 13.91], ["Bloodstone Genuine", 66.0, 6.2, 5.08], ["Lunar Violet", 64.0, 7.47, -10.7], ["Neutral Tint", 44.0, 1.31, -3.88], ["Graphite Gray", 45.0, 0.61, 1.37], ["Jane's Grey", 50.0, -1.94, -3.0], ["Payne's Blue Gray", 32.0, -2.01, -8.13], ["Payne's Gray", 47.0, -2.43, -5.0], ["Alvaro's Caliente Grey", 41.0, 0.7, 9.61], ["Alvaro's Fresco Grey", 47.0, 0.02, -6.69], ["Joseph Z's Warm Grey", 38.0, 0.2, 7.05], ["Joseph Z's Neutral Grey", 39.0, -2.45, 6.37], ["Joseph Z's Cool Grey", 38.0, -6.23, 0.19], ["McCracken Black", 44.0, 0.5, -2.4], ["Jane's Black (Red/Green)", 38.0, 1.3, -1.0], ["Jane's Black (Blue/Orange)", 39.0, 1.8, 0.3], ["Ivory Black", 47.0, 1.24, 6.07], ["Lamp Black", 28.0, 0.13, 0.73], ["Lunar Black", 65.0, 0.66, 1.48], ["Black Tourmaline Genuine", 65.0, -1.32, 0.91], ["Gray Titanium", 73.0, 0.16, 16.54], ["Chinese White", 97.0, -0.63, 3.48], ["Titanium White", 96.0, -0.49, 5.42], ["Jaune Brilliant No 1", 91.0, 3.2, 29.9], ["Jaune Brilliant No 2", 87.0, 13.2, 31.0], ["Manganese Violet", 64.0, 22.6, -22.3], ["Cobalt Green Deep", 58.0, -18.5, 2.2], ["Earthy Light Red", 66.0, 34.4, 15.2], ["Coral Reef", 82.0, 26.8, 15.2]];
 const PROPS={"Alizarin Crimson": [3, "N", "T"], "Alvaro's Caliente Grey": [2, "N", "ST"], "Alvaro's Fresco Grey": [2, "G", "ST"], "Amazonite Genuine": [1, "N", "T"], "Amethyst Genuine": [2, "G", "ST"], "Anthraquinoid Red": [3, "N", "T"], "Anthraquinoid Scarlet": [2, "N", "T"], "Aureolin (Cobalt Yellow)": [1, "N", "T"], "Aussie Red Gold": [2, "N", "T"], "Azo Yellow": [3, "N", "ST"], "Bismuth Vanadate Yellow": [2, "N", "O"], "Black Tourmaline Genuine": [1, "G", "T"], "Bloodstone Genuine": [1, "G", "T"], "Blue Apatite Genuine": [1, "G", "T"], "Bordeaux": [3, "N", "ST"], "Bronzite Genuine": [1, "G", "T"], "Buff Titanium": [1, "G", "ST"], "Burgundy Red Ochre": [1, "G", "T"], "Burgundy Yellow Ochre": [1, "G", "T"], "Burnt Bronzite Genuine": [1, "G", "T"], "Burnt Sienna": [1, "G", "ST"], "Burnt Sienna Light": [1, "N", "T"], "Burnt Tiger's Eye Genuine": [2, "G", "T"], "Burnt Umber": [2, "G", "ST"], "Burnt Yellow Ochre": [2, "G", "T"], "Cadmium Orange Hue": [2, "N", "SO"], "Cadmium Red Medium Hue": [2, "N", "SO"], "Cadmium Red Scarlet Hue": [2, "N", "SO"], "Cadmium Yellow Deep Hue": [1, "N", "SO"], "Cadmium Yellow Light Hue": [2, "N", "SO"], "Cadmium Yellow Medium Hue": [2, "N", "SO"], "Carbazole Violet": [3, "N", "ST"], "Carmine": [4, "N", "ST"], "Cascade Green": [3, "G", "ST"], "Cerulean Blue": [1, "G", "ST"], "Cerulean Blue Chromium": [2, "G", "ST"], "Chinese White": [1, "N", "ST"], "Chromium Green Oxide": [2, "G", "O"], "Cobalt Blue": [2, "G", "ST"], "Cobalt Blue Violet": [2, "G", "ST"], "Cobalt Green": [2, "G", "ST"], "Cobalt Green Pale": [1, "G", "T"], "Cobalt Teal Blue": [1, "G", "ST"], "Cobalt Turquoise": [1, "G", "ST"], "Cobalt Violet": [1, "G", "T"], "Cobalt Violet Deep": [2, "G", "T"], "Deep Sap Green": [3, "N", "T"], "Deep Scarlet": [3, "N", "ST"], "Diopside Genuine": [2, "G", "T"], "English Red Earth": [1, "G", "O"], "English Red Ochre": [1, "G", "T"], "Enviro-Friendly Brown Iron Oxide": [1, "G", "ST"], "Enviro-Friendly Red Iron Oxide": [1, "G", "ST"], "Enviro-Friendly Yellow Iron Oxide": [1, "G", "ST"], "Fired Gold Ochre": [1, "G", "T"], "French Ochre": [1, "G", "T"], "French Ultramarine": [3, "G", "T"], "Fuchsite Genuine": [1, "N", "T"], "Garnet Genuine": [2, "G", "T"], "German Greenish Raw Umber": [1, "G", "ST"], "Goethite (Brown Ochre)": [2, "G", "ST"], "Graphite Gray": [2, "N", "O"], "Gray Titanium": [1, "G", "ST"], "Green Apatite Genuine": [2, "G", "ST"], "Green Gold": [3, "N", "T"], "Hansa Yellow Deep": [2, "N", "ST"], "Hansa Yellow Light": [2, "N", "ST"], "Hansa Yellow Medium": [2, "N", "ST"], "Hematite Burnt Scarlet Genuine": [2, "G", "ST"], "Hematite Genuine": [2, "G", "ST"], "Hematite Violet Genuine": [2, "G", "ST"], "Hooker's Green": [2, "N", "ST"], "Imperial Purple": [2, "G", "ST"], "Indanthrone Blue": [3, "N", "T"], "Indian Red": [3, "G", "O"], "Indian Yellow": [2, "N", "T"], "Indigo": [3, "N", "T"], "Isoindoline Yellow": [3, "N", "ST"], "Italian Burnt Sienna": [1, "G", "ST"], "Italian Deep Ochre": [1, "G", "T"], "Italian Venetian Red": [1, "G", "ST"], "Ivory Black": [2, "G", "ST"], "Jadeite Genuine": [1, "G", "ST"], "Jane's Grey": [2, "G", "ST"], "Joseph Z's Cool Grey": [2, "G", "ST"], "Joseph Z's Neutral Grey": [2, "G", "ST"], "Joseph Z's Warm Grey": [2, "G", "ST"], "Kingman Green Turquoise Genuine": [1, "G", "T"], "Kyanite Genuine": [1, "G", "T"], "Lamp Black": [4, "N", "O"], "Lapis Lazuli Genuine": [1, "G", "T"], "Lavender": [2, "G", "ST"], "Lemon Yellow": [2, "N", "T"], "Lunar Black": [2, "G", "T"], "Lunar Blue": [2, "G", "ST"], "Lunar Earth": [1, "G", "T"], "Lunar Red Rock": [2, "G", "ST"], "Lunar Violet": [2, "G", "ST"], "Manganese Blue Hue": [3, "G", "T"], "Mars Yellow": [1, "G", "ST"], "Mayan Blue Genuine": [2, "G", "T"], "Mayan Dark Blue": [2, "N", "ST"], "Mayan Orange": [2, "N", "ST"], "Mayan Red": [2, "G", "T"], "Mayan Violet": [2, "G", "T"], "Mayan Yellow": [1, "N", "T"], "Minnesota Pipestone Genuine": [1, "G", "ST"], "Monte Amiata Natural Sienna": [2, "G", "T"], "Moonglow": [2, "G", "T"], "Mummy Bauxite": [2, "G", "ST"], "Naphthamide Maroon": [2, "N", "ST"], "Naples Yellow": [1, "N", "ST"], "Neutral Tint": [2, "N", "ST"], "New Gamboge": [2, "N", "T"], "Nickel Azo Yellow": [2, "N", "T"], "Nickel Titanate Yellow": [1, "G", "SO"], "Olive Green": [2, "G", "ST"], "Opera Pink": [1, "G", "T"], "Organic Vermilion": [2, "N", "ST"], "Payne's Blue Gray": [2, "N", "ST"], "Payne's Gray": [2, "G", "ST"], "Perinone Orange": [4, "N", "ST"], "Permanent Alizarin Crimson": [3, "N", "T"], "Permanent Brown": [3, "N", "T"], "Permanent Green": [3, "N", "T"], "Permanent Green Light": [2, "N", "ST"], "Permanent Orange": [2, "N", "T"], "Permanent Red": [4, "N", "ST"], "Permanent Red Deep": [3, "N", "ST"], "Permanent Violet": [3, "N", "ST"], "Permanent Yellow Deep": [2, "N", "T"], "Perylene Green": [3, "N", "ST"], "Perylene Maroon": [4, "N", "ST"], "Perylene Red": [3, "N", "ST"], "Perylene Scarlet": [3, "G", "ST"], "Perylene Violet": [3, "N", "T"], "Phthalo Blue (Green Shade)": [4, "N", "T"], "Phthalo Blue (Red Shade)": [4, "N", "T"], "Phthalo Blue Turquoise": [4, "N", "T"], "Phthalo Green (Blue Shade)": [4, "N", "T"], "Phthalo Green (Yellow Shade)": [4, "N", "T"], "Phthalo Turquoise": [4, "N", "T"], "Phthalo Yellow Green": [3, "N", "T"], "Piemontite Genuine": [2, "G", "ST"], "Pompeii Red": [2, "G", "ST"], "Potter's Pink": [2, "G", "ST"], "Prussian Blue": [3, "G", "T"], "Prussian Green": [3, "G", "ST"], "Purpurite Genuine": [2, "G", "ST"], "Pyrrol Crimson": [3, "N", "ST"], "Pyrrol Orange": [3, "N", "ST"], "Pyrrol Red": [3, "N", "ST"], "Pyrrol Scarlet": [3, "N", "ST"], "Quinacridone Burnt Orange": [2, "G", "T"], "Quinacridone Burnt Scarlet": [2, "N", "T"], "Quinacridone Coral": [2, "N", "T"], "Quinacridone Deep Gold": [2, "N", "T"], "Quinacridone Fuchsia": [3, "N", "T"], "Quinacridone Gold": [2, "G", "T"], "Quinacridone Lilac": [3, "N", "T"], "Quinacridone Magenta": [3, "N", "T"], "Quinacridone Pink": [2, "N", "T"], "Quinacridone Purple": [3, "N", "T"], "Quinacridone Red": [3, "N", "T"], "Quinacridone Rose": [3, "N", "T"], "Quinacridone Sienna": [2, "G", "T"], "Quinacridone Violet": [4, "N", "T"], "Quinophthalone Yellow": [2, "N", "ST"], "Rare Green Earth": [1, "G", "T"], "Raw Sienna": [2, "G", "ST"], "Raw Sienna Light": [1, "N", "ST"], "Raw Umber": [2, "G", "ST"], "Raw Umber Violet": [2, "G", "ST"], "Red Fuchsite Genuine": [1, "G", "T"], "Red Jasper Genuine": [1, "G", "ST"], "Rhodonite Genuine": [2, "N", "T"], "Rich Green Gold": [2, "N", "ST"], "Roasted French Ochre": [2, "G", "T"], "Rose Madder Permanent": [1, "N", "T"], "Rose of Ultramarine": [3, "G", "T"], "Sap Green": [3, "G", "T"], "Sedona Genuine": [1, "G", "ST"], "Sepia": [2, "G", "ST"], "Serpentine Genuine": [1, "G", "ST"], "Shadow Violet": [1, "G", "T"], "Sicklerite Genuine": [1, "G", "T"], "Sleeping Beauty Turquoise Genuine": [1, "G", "ST"], "Sodalite Genuine": [2, "G", "ST"], "Spring Green": [2, "N", "ST"], "Sugilite Genuine": [2, "G", "T"], "Terre Ercolano": [2, "G", "ST"], "Terre Verte": [1, "G", "T"], "Tiger's Eye Genuine": [1, "G", "T"], "Titanium White": [1, "N", "ST"], "Transparent Brown Oxide": [1, "G", "T"], "Transparent Pyrrol Orange": [2, "N", "T"], "Transparent Red Oxide": [1, "G", "T"], "Transparent Yellow Oxide": [1, "G", "T"], "Ultramarine Blue": [3, "G", "T"], "Ultramarine Red": [1, "G", "T"], "Ultramarine Turquoise": [2, "G", "T"], "Ultramarine Violet": [2, "G", "T"], "Undersea Green": [3, "G", "ST"], "Van Dyck Brown": [1, "G", "ST"], "Venetian Red": [3, "G", "O"], "Verditer Blue": [2, "G", "ST"], "Verona Gold Ochre": [1, "G", "T"], "Viridian": [1, "G", "T"], "Wisteria": [1, "N", "ST"], "Yavapai Genuine": [1, "G", "T"], "Yellow Ochre": [1, "G", "T"], "Zoisite Genuine": [2, "G", "ST"], "King's Royal Blue": [2, "G", "ST"], "McCracken Black": [2, "G", "T"]};
@@ -146,14 +201,15 @@ const GROUPS={
  series:[["1","1"],["2","2"],["3","3"],["4","4"],["5","5"]]};
 const NS="http://www.w3.org/2000/svg";
 function lab2rgb(L,a,b){let y=(L+16)/116,x=a/500+y,z=y-b/200;const f=t=>t**3>0.008856?t**3:(t-16/116)/7.787;x=0.95047*f(x);y=f(y);z=1.08883*f(z);let r=x*3.2406+y*-1.5372+z*-0.4986,g=x*-0.9689+y*1.8758+z*0.0415,bl=x*0.0557+y*-0.2040+z*1.0570;const c=v=>{v=v>0.0031308?1.055*v**(1/2.4)-0.055:12.92*v;return Math.round(Math.max(0,Math.min(1,v))*255)};return `rgb(${c(r)},${c(g)},${c(bl)})`}
-const P=RAW.map(([n,L,a,b])=>{const pr=PROPS[n];return{n,L,a,b,C:Math.hypot(a,b),h:((Math.atan2(b,a)*180/Math.PI)+360)%360,rgb:lab2rgb(L,a,b),x:a,y:-b,
+function lab2arr(L,a,b){return lab2rgb(L,a,b).match(/\d+/g).map(Number)}
+const P=RAW.map(([n,L,a,b])=>{const pr=PROPS[n];return{n,L,a,b,C:Math.hypot(a,b),h:((Math.atan2(b,a)*180/Math.PI)+360)%360,rgb:lab2rgb(L,a,b),arr:lab2arr(L,a,b),x:a,y:-b,
  lf:LF_IV.includes(n)?4:LF_II.includes(n)?2:LF_UN.includes(n)?0:1,mix:MIX.includes(n),stain:pr?pr[0]:0,gran:pr?pr[1]:"",trans:pr?pr[2]:"",series:SERIES[n]||0}});
 const byName=Object.fromEntries(P.map(p=>[p.n,p]));
 function hull(pts){pts=[...pts].sort((p,q)=>p.x-q.x||p.y-q.y);if(pts.length<3)return pts;const cr=(o,a,b)=>(a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);const lo=[],up=[];for(const p of pts){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}for(let i=pts.length-1;i>=0;i--){const p=pts[i];while(up.length>=2&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}return lo.slice(0,-1).concat(up.slice(0,-1))}
 function area(h){if(h.length<3)return 0;let s=0;for(let i=0;i<h.length;i++){const a=h[i],b=h[(i+1)%h.length];s+=a.x*b.y-b.x*a.y}return Math.abs(s)/2}
 const FULL=area(hull(P));
 const DEFF={lf:[],pig:["any"],trans:[],stain:[],gran:["any"],series:[],missing:true};
-function load(){let s={sel:[...MINE],base:[...MINE]},f=JSON.parse(JSON.stringify(DEFF));try{const v=JSON.parse(localStorage.getItem("dswheel:public:v1")||"null");if(v){if(Array.isArray(v.sel))s.sel=v.sel.filter(n=>byName[n]);if(Array.isArray(v.base))s.base=v.base.filter(n=>byName[n]);if(v.f)f=Object.assign(f,v.f);if(!Array.isArray(f.series))f.series=[];if(f.lf.includes("any"))f.lf=[];else if(f.lf.length===1&&f.lf[0]==="2"&&!v.f.lfMulti)f.lf=["1","2"];f.lfMulti=true}}catch(e){}return{...s,f}}
+function load(){let s={sel:[...MINE],base:[...MINE],mix:[],water:0},f=JSON.parse(JSON.stringify(DEFF));try{const v=JSON.parse(localStorage.getItem("dswheel:public:v1")||"null");if(v){if(Array.isArray(v.sel))s.sel=v.sel.filter(n=>byName[n]);if(Array.isArray(v.base))s.base=v.base.filter(n=>byName[n]);if(Array.isArray(v.mix))s.mix=v.mix.filter(n=>byName[n]).slice(0,5);if(typeof v.water==="number")s.water=v.water;if(v.f)f=Object.assign(f,v.f);if(!Array.isArray(f.series))f.series=[];if(f.lf.includes("any"))f.lf=[];else if(f.lf.length===1&&f.lf[0]==="2"&&!v.f.lfMulti)f.lf=["1","2"];f.lfMulti=true}}catch(e){}return{...s,f}}
 let st=load();
 function save(){try{localStorage.setItem("dswheel:public:v1",JSON.stringify(st))}catch(e){}}
 // why a paint fails the filters (empty array = passes)
@@ -175,7 +231,7 @@ for(let d=0;d<360;d+=2.5){const a1=d*Math.PI/180,a2=(d+2.6)*Math.PI/180,r1=105,r
 const tip=document.getElementById("tip"),info=document.getElementById("info");
 function describe(p){const props=[p.mix?"Mixture":"Single pigment",p.lf?LFNAME[p.lf]:"Lightfastness not listed",p.trans?TNAME[p.trans]:null,p.stain?SNAME[p.stain]:null,p.gran?(p.gran==="G"?"Granulating":"Non-granulating"):null,p.series?"Series "+p.series:null].filter(Boolean);
  const w=fails(p);return `<b>${p.n}</b>${st.sel.includes(p.n)?" · in your palette":""}<br>Hue ${p.h.toFixed(1)}°, chroma ${p.C.toFixed(1)}, lightness ${p.L}<br>${props.join(" · ")}${p.stain?"":" · other properties not listed"}${w.length?`<br>Outside your filters: ${w.join(", ")}`:""}`}
-function toggle(n){const i=st.sel.indexOf(n);if(i>=0)st.sel.splice(i,1);else st.sel.push(n);save();render()}
+function toggle(n){const i=st.sel.indexOf(n);if(i>=0){st.sel.splice(i,1);st.mix=st.mix.filter(m=>m!==n)}else st.sel.push(n);save();render()}
 const allg=document.getElementById("allg");
 P.forEach(p=>{const c=el("circle",{cx:p.x,cy:p.y,r:1.5,fill:p.rgb,stroke:"var(--paper)","stroke-width":.3,tabindex:0,role:"button","aria-label":p.n,style:"cursor:pointer"},allg);p.dot=c;
  c.addEventListener("pointerenter",()=>{tip.textContent=p.n;tip.style.opacity=1;info.innerHTML=describe(p)});
@@ -183,6 +239,7 @@ P.forEach(p=>{const c=el("circle",{cx:p.x,cy:p.y,r:1.5,fill:p.rgb,stroke:"var(--
  c.addEventListener("pointerleave",()=>{tip.style.opacity=0});
  c.addEventListener("click",()=>{toggle(p.n);info.innerHTML=describe(p)});
  c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle(p.n);info.innerHTML=describe(p)}})});
+const hueSort=(a,b)=>(a.C<5)-(b.C<5)||((a.h+30)%360)-((b.h+30)%360);
 const pts=h=>h.map(p=>`${p.x},${p.y}`).join(" ");
 function row(p,right,btnTxt,btnLabel,onClick){const li=document.createElement("li");li.className="row";li.innerHTML=`<span class="sw" style="background:${p.rgb}"></span><span class="nm">${p.n}${right.note?`<br><span class="note">${right.note}</span>`:""}</span>${right.gain?`<span class="gain">${right.gain}</span>`:""}`;const b=document.createElement("button");b.className="x";b.textContent=btnTxt;b.setAttribute("aria-label",btnLabel);b.onclick=onClick;li.appendChild(b);li.addEventListener("pointerenter",()=>{info.innerHTML=describe(p);p.dot.setAttribute("r",3)});li.addEventListener("pointerleave",()=>render());return li}
 // filter chips
@@ -199,13 +256,15 @@ function render(){
  const sel=st.sel.map(n=>byName[n]),H=hull(sel),A=area(H),Hset=new Set(H.map(p=>p.n));
  const bH=hull(st.base.map(n=>byName[n])),bA=area(bH);
  const wg=document.getElementById("washg");wg.innerHTML="";
- if(H.length>2){el("polygon",{points:pts(H),fill:"var(--wash)","fill-opacity":"var(--washop)",stroke:"none",filter:"url(#wet)"},wg);el("polygon",{points:pts(H),fill:"none",stroke:"var(--wash)","stroke-opacity":.45,"stroke-width":.7,"stroke-linejoin":"round",filter:"url(#wet)"},wg)}
+ const mine=document.getElementById("showMine").checked;
+ if(mine&&H.length>2){el("polygon",{points:pts(H),fill:"var(--wash)","fill-opacity":"var(--washop)",stroke:"none",filter:"url(#wet)"},wg);el("polygon",{points:pts(H),fill:"none",stroke:"var(--wash)","stroke-opacity":.45,"stroke-width":.7,"stroke-linejoin":"round",filter:"url(#wet)"},wg)}
  const bg=document.getElementById("baseg");bg.innerHTML="";
- if(document.getElementById("showBase").checked&&bH.length>2)el("polygon",{points:pts(bH),fill:"none",stroke:"var(--graphite)","stroke-width":.45,"stroke-dasharray":"1.6 1.2"},bg);
+ if(mine&&document.getElementById("showBase").checked&&bH.length>2)el("polygon",{points:pts(bH),fill:"none",stroke:"var(--graphite)","stroke-width":.45,"stroke-dasharray":"1.6 1.2"},bg);
  const showAll=document.getElementById("showAll").checked;
- P.forEach(p=>{const s=st.sel.includes(p.n),ok=passes(p);p.dot.setAttribute("r",s?2.6:1.4);p.dot.setAttribute("stroke",s?"var(--ink)":"var(--paper)");p.dot.setAttribute("stroke-width",s?.5:.3);p.dot.setAttribute("stroke-dasharray",s&&!ok?"0.8 0.6":"none");p.dot.style.display=(s||(showAll&&ok))?"":"none";if(s)allg.appendChild(p.dot)});
+ P.forEach(p=>{const s=mine&&st.sel.includes(p.n),ok=passes(p);p.dot.setAttribute("r",s?2.6:1.4);p.dot.setAttribute("stroke",s?"var(--ink)":"var(--paper)");p.dot.setAttribute("stroke-width",s?.5:.3);p.dot.setAttribute("stroke-dasharray",s&&!ok?"0.8 0.6":"none");p.dot.style.display=(s||(showAll&&ok))?"":"none";if(s)allg.appendChild(p.dot)});
  const lg=document.getElementById("labg");lg.innerHTML="";
- if(document.getElementById("showLab").checked)sel.forEach(p=>{const r=Math.max(p.C,6),ux=p.x/r,uy=p.y/r,small=p.C<3;const t=el("text",{x:small?p.x+3.5:p.x+ux*4,y:small?p.y+1:p.y+uy*4+1,"font-size":3.1,fill:"var(--ink)","text-anchor":small?"start":(Math.abs(ux)<.25?"middle":(ux>0?"start":"end")),"paint-order":"stroke",stroke:"var(--paper)","stroke-width":1,"pointer-events":"none"},lg);t.textContent=p.n.replace(" Genuine","").replace("(Green Shade)","GS").replace("(Yellow Shade)","YS").replace("(Red Shade)","RS").replace("(Blue Shade)","BS")});
+ if(mine&&document.getElementById("showLab").checked)sel.forEach(p=>{const r=Math.max(p.C,6),ux=p.x/r,uy=p.y/r,small=p.C<3;const t=el("text",{x:small?p.x+3.5:p.x+ux*4,y:small?p.y+1:p.y+uy*4+1,"font-size":3.1,fill:"var(--ink)","text-anchor":small?"start":(Math.abs(ux)<.25?"middle":(ux>0?"start":"end")),"paint-order":"stroke",stroke:"var(--paper)","stroke-width":1,"pointer-events":"none"},lg);t.textContent=p.n.replace(" Genuine","").replace("(Green Shade)","GS").replace("(Yellow Shade)","YS").replace("(Red Shade)","RS").replace("(Blue Shade)","BS")});
+ document.getElementById("palCount").textContent=sel.length?`(${sel.length})`:"";
  document.getElementById("pct").textContent=Math.round(A/FULL*100)+"%";
  const pool=P.filter(passes),fA=area(hull(pool)),selOk=sel.filter(passes),sA=area(hull(selOk)),out=sel.length-selOk.length;
  document.getElementById("fpct").textContent=fA?Math.round(sA/fA*100)+"%":"–";
@@ -218,15 +277,48 @@ function render(){
  else if(!gains.length)gu.innerHTML='<li class="fine">Nothing that meets your filters adds more than half a percent.</li>';
  gains.forEach(o=>gu.appendChild(row(o.p,{gain:"+"+o.g.toFixed(1)+"%"},"+","Add "+o.p.n,()=>toggle(o.p.n))));
  const pu=document.getElementById("pal");pu.innerHTML="";
- [...sel].sort((a,b)=>(a.C<5)-(b.C<5)||((a.h+30)%360)-((b.h+30)%360)).forEach(p=>{const parts=[];if(Hset.has(p.n)&&A){const loss=(A-area(hull(sel.filter(q=>q!==p))))/A*100;parts.push(`Sets the edge · removing it loses ${loss.toFixed(1)}%`)}const w=fails(p);if(w.length)parts.push("Outside your filters: "+w.join(", "));pu.appendChild(row(p,{note:parts.join("<br>")},"×","Remove "+p.n,()=>toggle(p.n)))});
+ [...sel].sort(hueSort).forEach(p=>{const parts=[];if(Hset.has(p.n)&&A){const loss=(A-area(hull(sel.filter(q=>q!==p))))/A*100;parts.push(`Sets the edge · removing it loses ${loss.toFixed(1)}%`)}const w=fails(p);if(w.length)parts.push("Outside your filters: "+w.join(", "));pu.appendChild(row(p,{note:parts.join("<br>")},"×","Remove "+p.n,()=>toggle(p.n)))});
  if(!sel.length)pu.innerHTML='<li class="fine">Tap dots on the wheel or search below to build a palette.</li>';
  search()}
 const q=document.getElementById("q"),res=document.getElementById("results");
 function search(){const v=q.value.trim().toLowerCase();res.innerHTML="";if(!v)return;const m=P.filter(p=>p.n.toLowerCase().includes(v)&&(passes(p)||st.sel.includes(p.n))).slice(0,30);if(!m.length){res.innerHTML='<li class="fine">No paints match that name and your filters.</li>';return}m.forEach(p=>{const s=st.sel.includes(p.n);res.appendChild(row(p,{},s?"×":"+",(s?"Remove ":"Add ")+p.n,()=>toggle(p.n)))})}
 q.addEventListener("input",search);
-["showAll","showLab","showBase"].forEach(id=>document.getElementById(id).addEventListener("change",render));
+["showMine","showAll","showLab","showBase"].forEach(id=>document.getElementById(id).addEventListener("change",render));
 document.getElementById("setBase").onclick=()=>{st.base=[...st.sel];save();render()};
 document.getElementById("reset").onclick=()=>{st.sel=[...MINE];save();render()};
+// ---- mixing ----
+const MAXMIX=5,STEPS=33;
+const toLin=v=>{v/=255;return v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4},toS=v=>{v=v<=0.0031308?12.92*v:1.055*v**(1/2.4)-0.055;return Math.round(Math.max(0,Math.min(1,v))*255)};
+function mixRGB(a,b,t){if(window.mixbox)return mixbox.lerp(a,b,t);return a.map((x,i)=>toS(Math.max(1e-4,toLin(x))**(1-t)*Math.max(1e-4,toLin(b[i]))**t))}
+function dilute(c,w){return c.map(x=>toS(Math.max(1e-4,toLin(x))**(1-w)))}
+const TEX=`url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .25  0 0 0 0 .22  0 0 0 0 .2  0 0 0 -2.6 1.35"/></filter><rect width="120" height="120" filter="url(#n)"/></svg>')}")`;
+function renderMix(){
+ const box=document.getElementById("mixPal");box.innerHTML="";
+ const full=st.mix.length>=MAXMIX;
+ if(!st.sel.length)box.innerHTML='<li class="fine">Your palette is empty. Add paints on the wheel first.</li>';
+ st.sel.map(n=>byName[n]).sort(hueSort).forEach(p=>{const on=st.mix.includes(p.n),dis=full&&!on;const li=document.createElement("li");li.className="row"+(dis?" dis":"");
+  li.innerHTML=`<input type="checkbox" ${on?"checked":""} ${dis?"disabled":""} aria-label="Mix ${p.n}"><span class="sw" style="background:${p.rgb}"></span><span class="nm">${p.n}${p.gran==="G"?'<br><span class="note">Granulating</span>':""}</span>`;
+  const cb=li.querySelector("input");const flip=()=>{if(dis)return;if(on)st.mix=st.mix.filter(m=>m!==p.n);else st.mix.push(p.n);save();renderMix()};
+  cb.addEventListener("change",flip);li.addEventListener("click",e=>{if(e.target!==cb)flip()});box.appendChild(li)});
+ const bars=document.getElementById("bars");bars.innerHTML="";
+ const ms=st.mix.map(n=>byName[n]).sort(hueSort);
+ if(ms.length<2){bars.innerHTML=`<div class="empty">${ms.length?"Pick one more paint to see a mix.":"Pick two to five paints to see how they mix."}</div>`;return}
+ const w=st.water/100;
+ for(let i=0;i<ms.length;i++)for(let j=i+1;j<ms.length;j++){const A=ms[i],B=ms[j];
+  const stops=[];for(let k=0;k<STEPS;k++){const t=k/(STEPS-1);const c=dilute(mixRGB(A.arr,B.arr,t),w);stops.push(`rgb(${c.join(",")}) ${(t*100).toFixed(2)}%`)}
+  const gA=A.gran==="G",gB=B.gran==="G",unk=!A.gran||!B.gran;
+  let g=gA&&gB?"Both granulate":gA?`${A.n} granulates`:gB?`${B.n} granulates`:"";if(unk&&!g)g="Granulation not listed";
+  const d=document.createElement("div");d.className="bar";
+  d.innerHTML=`<div class="bl"><span>${A.n} → ${B.n}</span><span class="g">${g}</span></div><div class="strip" style="background:linear-gradient(to right, ${stops.join(",")})"></div>`;
+  if(gA||gB){const tx=document.createElement("div");tx.className="tex";tx.style.backgroundImage=TEX;const m=`linear-gradient(to right, rgba(0,0,0,${gA?1:0}), rgba(0,0,0,${gB?1:0}))`;tx.style.maskImage=m;tx.style.webkitMaskImage=m;tx.style.opacity=(0.55*(1-w*0.6)).toFixed(2);d.querySelector(".strip").appendChild(tx)}
+  bars.appendChild(d)}
+}
+const water=document.getElementById("water"),waterVal=document.getElementById("waterVal");
+water.value=st.water;waterVal.textContent=st.water+"%";
+water.addEventListener("input",()=>{st.water=+water.value;waterVal.textContent=st.water+"%";renderMix()});
+water.addEventListener("change",save);
+if(!window.mixbox){const n=document.getElementById("mixNote");n.textContent="The Mixbox mixing library couldn't load, so strips use a simpler subtractive blend. "+n.textContent}
+const _render=render;render=function(){_render();renderMix()};
 buildChips();render();
 </script>
 </body>

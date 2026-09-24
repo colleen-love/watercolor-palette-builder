@@ -16,8 +16,4 @@ Filter by lightfastness, single pigment vs. mixture, transparency, staining, gra
 
 Reach is the area of the outline around your paints on the a\*b\* plane. Real mixtures bow inward, so treat it as a ceiling. Each paint is a single measurement at one strength, and lightness isn't shown.
 
-## Hosting
-
-It's a single self-contained `index.html`. To publish with GitHub Pages: add it to a repo, then Settings → Pages → deploy from the main branch.
-
 Not affiliated with Daniel Smith.

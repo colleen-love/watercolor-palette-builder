@@ -1,6 +1,8 @@
 # Daniel Smith pigment wheel
 
-An interactive hue–chroma wheel of every Daniel Smith Extra Fine watercolor, for building a palette with the widest possible color range.
+An interactive hue–chroma wheel of every Daniel Smith Extra Fine watercolor, for building a palette with the widest possible color range. 
+
+[Try it out!](https://colleen-love.github.io/watercolor-palette-builder/)
 
 Tap paints to build a palette. The shaded wash shows the range your palette can reach, and the sidebar shows how much of the full Daniel Smith range (and of the range that meets your filters) you cover, which paints would widen it most, and which of your paints set the edge.
 

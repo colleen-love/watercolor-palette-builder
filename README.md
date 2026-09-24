@@ -14,7 +14,7 @@ Filter by lightfastness, single pigment vs. mixture, transparency, staining, gra
 
 - Color (CIELAB): Daniel Smith, [Watercolors CIE Lab Coordinates](https://danielsmith.com/daniel-smith-watercolors-cie-lab-coordinates/)
 - Lightfastness, staining, granulation, transparency, series: Daniel Smith, [Pigment Characteristics sheet (May 2021)](https://danielsmith.com/wp-content/uploads/2021/05/DS-Watercolor-pigment-characteristics.pdf), plus retailer listings for King's Royal Blue and McCracken Black
-- Nine newer paints are missing property data.
+- Paints added after 2021 (the 2025 releases, both Jane's Blacks, Chrome Titanate Yellow): Daniel Smith's color-story and new-color pages
 
 ## Caveats
 

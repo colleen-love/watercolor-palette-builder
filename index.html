@@ -99,6 +99,17 @@ input[type=search]{width:100%;font:inherit;font-size:15px;padding:7px 12px;borde
 @media (max-width:900px){.r4{grid-template-columns:1fr;row-gap:24px}.page{grid-template-columns:1fr}.r2l,.r2r,.r3l,.r3r,.r4l,.r4r,.r5{grid-column:1}}
 .ext{display:inline-flex;vertical-align:-1px;color:var(--graphite);padding:2px;border-radius:4px}
 .ext:hover{color:var(--ink);background:var(--hover)}
+.lrange{display:flex;flex-direction:column;gap:4px;padding-top:2px}
+.lslide{position:relative;height:22px}
+.ltrack{position:absolute;left:0;right:0;top:8px;height:6px;border-radius:3px;background:linear-gradient(to right,#1e1e1e,#fafafa);border:1px solid var(--rule)}
+.lfill{position:absolute;top:6px;height:10px;border:2px solid var(--ink);border-radius:5px;pointer-events:none}
+.lslide input{position:absolute;left:0;top:0;width:100%;height:22px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none;z-index:3}
+.lslide input::-webkit-slider-runnable-track{background:none;height:22px}
+.lslide input::-moz-range-track{background:none}
+.lslide input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;margin-top:3px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:pointer}
+.lslide input::-moz-range-thumb{pointer-events:auto;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:pointer}
+.lslide input:focus-visible::-webkit-slider-thumb{outline:2px solid var(--ink);outline-offset:2px}
+.lvals{display:flex;justify-content:space-between;font-size:13px;color:var(--graphite);font-variant-numeric:tabular-nums}
 #tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:13px;padding:5px 9px;border-radius:6px;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5}
 @media (prefers-reduced-motion:reduce){#tip{transition:none}}
 </style>
@@ -145,9 +156,14 @@ input[type=search]{width:100%;font:inherit;font-size:15px;padding:7px 12px;borde
 <div class="fgroup"><span class="flabel">Staining</span><div class="chips" data-key="stain" data-mode="many"></div></div>
 <div class="fgroup"><span class="flabel">Granulation</span><div class="chips" data-key="gran" data-mode="one"></div></div>
 <div class="fgroup"><span class="flabel">Price series</span><div class="chips" data-key="series" data-mode="many"></div></div>
+<div class="fgroup"><span class="flabel">Lightness</span><div class="lrange">
+<div class="lslide"><div class="ltrack"></div><div class="lfill" id="lfill"></div>
+<input type="range" id="lmin" min="0" max="100" step="1" value="0" aria-label="Lightness minimum">
+<input type="range" id="lmax" min="0" max="100" step="1" value="100" aria-label="Lightness maximum"></div>
+<div class="lvals"><span id="lval">Any</span><button class="link" id="lreset" hidden>Reset</button></div></div></div>
 <p class="fcount" id="fcount"></p>
 </div>
-<p class="fine">Color data: Daniel Smith, <a href="https://danielsmith.com/daniel-smith-watercolors-cie-lab-coordinates/">Watercolors CIE Lab Coordinates</a>. Lightfastness, staining, granulation, transparency and price series: Daniel Smith's <a href="https://danielsmith.com/wp-content/uploads/2021/05/DS-Watercolor-pigment-characteristics.pdf">2021 pigment characteristics sheet</a>, plus retailer listings for King's Royal Blue and McCracken Black. Paints added after 2021 (the 2025 releases, both Jane's Blacks, Chrome Titanate Yellow) use Daniel Smith's own color-story pages. Single pigment means one Colour Index pigment on the label; PrimaTek minerals count as single. Reach is the area of the outline around your paints in the a*b* plane. Real mixtures bow inward between distant hues and can bulge outward between neighbors, like yellow and green, so treat it as a guide. Lightness isn't shown.</p>
+<p class="fine">Color data: Daniel Smith, <a href="https://danielsmith.com/daniel-smith-watercolors-cie-lab-coordinates/">Watercolors CIE Lab Coordinates</a>. Lightfastness, staining, granulation, transparency and price series: Daniel Smith's <a href="https://danielsmith.com/wp-content/uploads/2021/05/DS-Watercolor-pigment-characteristics.pdf">2021 pigment characteristics sheet</a>, plus retailer listings for King's Royal Blue and McCracken Black. Paints added after 2021 (the 2025 releases, both Jane's Blacks, Chrome Titanate Yellow) use Daniel Smith's own color-story pages. Single pigment means one Colour Index pigment on the label; PrimaTek minerals count as single. Reach is the area of the outline around your paints in the a*b* plane. Real mixtures bow inward between distant hues and can bulge outward between neighbors, like yellow and green, so treat it as a guide. The wheel doesn't show lightness; use the Lightness filter (0 is black, 100 is white) to narrow by it.</p>
 </aside>
 <section class="r3l">
 <h2>Your palette <span class="count" id="palCount"></span></h2>
@@ -209,8 +225,8 @@ const byName=Object.fromEntries(P.map(p=>[p.n,p]));
 function hull(pts){pts=[...pts].sort((p,q)=>p.x-q.x||p.y-q.y);if(pts.length<3)return pts;const cr=(o,a,b)=>(a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);const lo=[],up=[];for(const p of pts){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}for(let i=pts.length-1;i>=0;i--){const p=pts[i];while(up.length>=2&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}return lo.slice(0,-1).concat(up.slice(0,-1))}
 function area(h){if(h.length<3)return 0;let s=0;for(let i=0;i<h.length;i++){const a=h[i],b=h[(i+1)%h.length];s+=a.x*b.y-b.x*a.y}return Math.abs(s)/2}
 const FULL=area(hull(P));
-const DEFF={lf:[],pig:["any"],trans:[],stain:[],gran:["any"],series:[],missing:true};
-function load(){let s={sel:[...MINE],base:[...MINE],mix:[],water:0},f=JSON.parse(JSON.stringify(DEFF));try{const v=JSON.parse(localStorage.getItem("dswheel:public:v1")||"null");if(v){if(Array.isArray(v.sel))s.sel=v.sel.filter(n=>byName[n]);if(Array.isArray(v.base))s.base=v.base.filter(n=>byName[n]);if(Array.isArray(v.mix))s.mix=v.mix.filter(n=>byName[n]).slice(0,5);if(typeof v.water==="number")s.water=v.water;if(v.f)f=Object.assign(f,v.f);if(!Array.isArray(f.series))f.series=[];if(f.lf.includes("any"))f.lf=[];else if(f.lf.length===1&&f.lf[0]==="2"&&!v.f.lfMulti)f.lf=["1","2"];f.lfMulti=true}}catch(e){}return{...s,f}}
+const DEFF={lf:[],pig:["any"],trans:[],stain:[],gran:["any"],series:[],light:[0,100],missing:true};
+function load(){let s={sel:[...MINE],base:[...MINE],mix:[],water:0},f=JSON.parse(JSON.stringify(DEFF));try{const v=JSON.parse(localStorage.getItem("dswheel:public:v1")||"null");if(v){if(Array.isArray(v.sel))s.sel=v.sel.filter(n=>byName[n]);if(Array.isArray(v.base))s.base=v.base.filter(n=>byName[n]);if(Array.isArray(v.mix))s.mix=v.mix.filter(n=>byName[n]).slice(0,5);if(typeof v.water==="number")s.water=v.water;if(v.f)f=Object.assign(f,v.f);if(!Array.isArray(f.series))f.series=[];if(!Array.isArray(f.light)||f.light.length!==2)f.light=[0,100];if(f.lf.includes("any"))f.lf=[];else if(f.lf.length===1&&f.lf[0]==="2"&&!v.f.lfMulti)f.lf=["1","2"];f.lfMulti=true}}catch(e){}return{...s,f}}
 let st=load();
 function save(){try{localStorage.setItem("dswheel:public:v1",JSON.stringify(st))}catch(e){}}
 // why a paint fails the filters (empty array = passes)
@@ -221,6 +237,7 @@ function fails(p){const f=st.f,w=[],miss=f.missing;
  if(f.stain.length){if(!p.stain){if(!miss)w.push("no staining data")}else if(!f.stain.includes(String(p.stain)))w.push(SNAME[p.stain].toLowerCase())}
  const g=f.gran[0];if(g!=="any"){if(!p.gran){if(!miss)w.push("no granulation data")}else if(p.gran!==g)w.push(p.gran==="G"?"granulating":"smooth")}
  if(f.series.length){if(!p.series){if(!miss)w.push("no series data")}else if(!f.series.includes(String(p.series)))w.push("series "+p.series)}
+ if(p.L<f.light[0]||p.L>f.light[1])w.push("lightness "+p.L);
  return w}
 const passes=p=>fails(p).length===0;
 const el=(t,a={},par)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(par)par.appendChild(e);return e};
@@ -254,7 +271,16 @@ function buildChips(){document.querySelectorAll(".chips").forEach(box=>{const ke
   box.appendChild(b)})});
  st.f.missing=true}
 
-document.getElementById("clearF").onclick=()=>{st.f=JSON.parse(JSON.stringify(DEFF));save();buildChips();render()};
+document.getElementById("clearF").onclick=()=>{st.f=JSON.parse(JSON.stringify(DEFF));save();buildChips();syncLight();render()}
+const lmin=document.getElementById("lmin"),lmax=document.getElementById("lmax");
+function syncLight(){const[a,b]=st.f.light;lmin.value=a;lmax.value=b;const fl=document.getElementById("lfill");fl.style.left=a+"%";fl.style.right=(100-b)+"%";
+ const any=a===0&&b===100;document.getElementById("lval").textContent=any?"Any":`${a}–${b}`;document.getElementById("lreset").hidden=any;
+ lmin.style.zIndex=a>90?5:3}
+function onLight(which){let a=+lmin.value,b=+lmax.value;if(a>b){if(which==="min")a=b;else b=a}st.f.light=[a,b];syncLight();render()}
+lmin.addEventListener("input",()=>onLight("min"));lmax.addEventListener("input",()=>onLight("max"));
+[lmin,lmax].forEach(e=>e.addEventListener("change",save));
+document.getElementById("lreset").onclick=()=>{st.f.light=[0,100];save();syncLight();render()};
+syncLight();;
 function render(){
  const sel=st.sel.map(n=>byName[n]),H=hull(sel),A=area(H),Hset=new Set(H.map(p=>p.n));
  const bH=hull(st.base.map(n=>byName[n])),bA=area(bH);
